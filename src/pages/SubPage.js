@@ -2,7 +2,6 @@ import {React, useEffect, useState} from 'react'
 import { useParams } from 'react-router'
 import { useAuth } from '../context/authContext'
 import firebase from '../util/firebase'
-import Post from '../components/Post'
 import { DateTime } from 'luxon'
 import { sortByNew, sortByScore } from '../util/sort'
 import {
@@ -29,6 +28,7 @@ import {
   Spinner,
   Heading
 } from "@chakra-ui/react";
+import PostMobile from '../components/PostMobile'
 export default function SubPage() {
 
     const db = firebase.firestore()
@@ -79,7 +79,7 @@ export default function SubPage() {
         </Stack>
         {loading === false && posts? (
           posts.map((post) => {
-            return <Post key={post.id} post={post} />;
+            return <PostMobile key={post.id} post={post} />;
           })
           
         ) : (

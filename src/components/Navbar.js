@@ -1,6 +1,8 @@
-import React from 'react'
+import {React, useEffect, useState, useRef} from 'react'
 import useViewport from '../hooks/useViewport'
 import { useAuth } from '../context/authContext'
+import firebase from '../util/firebase'
+
 import {
     Button,
     Flex,
@@ -21,16 +23,37 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
-    MenuGroup
+    MenuGroup,
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionPanel,
+    AccordionItem,
+    Divider,
+    Spacer
   } from "@chakra-ui/react";
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { EditIcon, HamburgerIcon } from '@chakra-ui/icons';
 
 
 export default function Navbar() {
+    const db = firebase.firestore()
     const { logout, user } = useAuth()
     const { width } = useViewport()
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const btnRef = React.useRef()
+    const btnRef = useRef()
+
+    const [userData, setUserData] = useState()
+
+    useEffect(() => {
+      user && db.collection("users")
+        .where("email", "==", user.email)
+        .get()
+        .then((data) => {
+          setUserData(data.docs[0].data());
+        })
+
+        
+    },[])
     
     return (
       <>
@@ -91,7 +114,7 @@ export default function Navbar() {
             />
             <Drawer
               isOpen={isOpen}
-              placement="top"
+              placement="right"
               onClose={onClose}
               finalFocusRef={btnRef}
             >
@@ -99,21 +122,44 @@ export default function Navbar() {
               <DrawerContent pt={5}>
                 <DrawerCloseButton />
 
-                <DrawerBody>
+                <DrawerBody position='relative'>
                   <VStack>
-                    <Link href="/home">
-                      <Text fontSize="med">Home</Text>
-                    </Link>
-                    <Link href="/signup">
-                      <Text fontSize="med">sign up</Text>
-                    </Link>
-                    <Link href="/account">
-                      <Text fontSize="med">account</Text>
-                    </Link>
+                    {!user ? <VStack>
+                      <Accordion>
+                        <AccordionButton>
+                          Popular Subs
+                          <AccordionIcon/>
+                        </AccordionButton>
+                      </Accordion>
+                      
+
+                    </VStack> :
+                    <VStack>
+                      <Accordion allowToggle={true}>
+                        <AccordionItem>
+                          <AccordionButton>
+                            Your subs
+                            <AccordionIcon/>
+                          </AccordionButton>
+                          {userData && userData.subs.map(sub=>(
+                            <AccordionPanel>
+                              <Link href={`/sub/${sub}`}>{sub}</Link>
+                            </AccordionPanel>
+                          ))}
+                        </AccordionItem>
+                      </Accordion>
+                      <Link href='/account' >Account</Link>
+                      
+                    </VStack>
+                    }
+                    <Button colorScheme='blue' rightIcon={<EditIcon/>}><Link href='/create'>Post</Link></Button>
                   </VStack>
                 </DrawerBody>
 
-                <DrawerFooter></DrawerFooter>
+                <DrawerFooter display='flex' justifyContent='center'>
+                  <Button colorScheme='red' >Logout</Button>
+
+                </DrawerFooter>
               </DrawerContent>
             </Drawer>
           </Flex>

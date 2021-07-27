@@ -1,41 +1,38 @@
 import {React, useEffect, useState, useRef} from 'react'
+import Comment from '../components/Comment'
 import { useParams } from 'react-router'
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  HStack,
-  SimpleGrid,
-  Spacer,
-  Stack,
-  Text,
-  Textarea,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Image,
-  Center,
-} from "@chakra-ui/react";
 import { useAuth } from '../context/authContext'
 import firebase from '../util/firebase'
 import { DateTime } from 'luxon'
+import { BsReplyFill } from 'react-icons/bs'
+import { TriangleUpIcon, TriangleDownIcon} from '@chakra-ui/icons'
+import {
+  Button,
+  Flex,
+  Heading,
+  Text,
+  Textarea,
+  Image,
+  HStack,
+  IconButton,
+  Stack
+} from "@chakra-ui/react";
 
 
 export default function PostPage() {
     const db = firebase.firestore()
     const { post } = useParams()
     const { user } = useAuth()
+    
+    const replyRef = useRef('')
+    const commentReplyRef = useRef(null)
 
     const [postData, setPostData] = useState(null)
     const [commentData, setCommentData] = useState([])
     const [postLoading, setPostLoading] = useState(true)
     const [commentLoading, setCommentLoading] = useState(true)
-
-    const replyRef = useRef(null)
-    const commentReplyRef = useRef(null)
+    const [voted, setVoted] = useState(false)
+    const [replyDisplay, setReplyDisplay] = useState('none')
 
     // Get Post 
     useEffect(()=>{
@@ -81,68 +78,109 @@ export default function PostPage() {
           .then(()=>window.location.reload())
       }
 
+      let upvote= ()=>{
+        if(!user){
+          window.location.href = '/login'
+        }
+        
+        db.collection('posts')
+          .doc(post.postID)
+          .update({score:post.score + 1})
+        
+        setVoted(true)
+      }
+  
+      let downVote= ()=>{
+        if(!user){
+          window.location.href = '/login'
+        }
+        
+        db.collection('posts')
+          .doc(post.postID)
+          .update({score:post.score - 1})
+        
+        setVoted(true)
+      }
+
       let commentReply = () =>{
 
       }
 
     
     return (
-      <div>
+      <Stack alignItems="center">
         {!postLoading && postData ? (
-          <Flex 
-            align='center'
-            direction="column"
+          <>
+            <Flex direction="column" pl={5} pr={5}>
+              <Heading mb={2} size="lg">
+                {postData.title}
+              </Heading>
+              {postData.img && <Image src={postData.img} boxSize='fit-content' fit='contain' />}
+              <Text>{postData.body}</Text>
+            </Flex>
+            <HStack
+              w="90%"
+              spacing={2}
+              mt={5}
+              pt={2}
+              pb={2}
+              borderTop="2px solid"
+              borderBottom="2px solid"
+              borderColor="gray.200"
             >
-            <Text>{postData.title}</Text>
-            <Image src={postData.img} boxSize="xl" />
-            <Text>{postData.body}</Text>
-          </Flex>
+              <IconButton
+                aria-label="Upvote post"
+                size="xs"
+                colorScheme={"blue"}
+                icon={<TriangleUpIcon />}
+                isDisabled={!voted ? false : true}
+                onClick={() => {
+                  upvote();
+                }}
+              />
+              <Text>{postData.score}</Text>
+              <IconButton
+                aria-label="Downvote post"
+                size="xs"
+                colorScheme={"red"}
+                icon={<TriangleDownIcon />}
+                isDisabled={!voted ? false : true}
+                onClick={() => {
+                  downVote();
+                }}
+              />
+              <IconButton
+                aria-label="Reply"
+                size="xs"
+                ml={10}
+                icon={<BsReplyFill />}
+                onClick={() => setReplyDisplay("block")}
+              />
+            </HStack>
+          </>
         ) : (
           <Text>Loading</Text>
         )}
-        <Divider />
-        <Flex
-          align='center'
-          direction='column'
-          >
-          <Textarea w="lg" placeholder="Enter your Reply here" ref={replyRef} />
-          <Button onClick={postReply}>Reply</Button>
-          <Accordion allowToggle>
-            {commentData.map((comment) =>
-              comment.subComments ? (
-                <AccordionItem key={comment.id}>
-                  <AccordionButton>
-                    <Box flex="1" textAlign="left">
-                      <Text fontSize="sm">{comment.user}</Text>
-                      {comment.body}
-                      <Text fontSize="xs">
-                        {DateTime.fromSeconds(
-                          comment.time.seconds
-                        ).toLocaleString(DateTime.DATETIME_MED)}
-                      </Text>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  {comment.subComments &&
-                    comment.subComments.map((subcomment) => (
-                      <AccordionPanel pb={4} key={subcomment.id}>
-                        <Text fontSize="sm">{subcomment.body}</Text>
-                      </AccordionPanel>
-                    ))}
-                </AccordionItem>
-              ) : (
-                <Box key={comment.id}>
-                  <Text fontSize="xs">
-                    {DateTime.fromSeconds(comment.time.seconds).toLocaleString(
-                      DateTime.DATETIME_MED
-                    )}
-                  </Text>
-                  <Text>{comment.body}</Text>
-                </Box>
-              )
-            )}
-          </Accordion>
+
+        <Flex w="100%" alignItems="center" direction="column" p={5}>
+          <Textarea
+            w="xs"
+            minH="10"
+            pb={1}
+            placeholder="Enter your Reply here"
+            variant="filled"
+            display={replyDisplay}
+            ref={replyRef}
+          />
+          <Button mt={3} display={replyDisplay} onClick={postReply}>
+            Reply
+          </Button>
+          <Stack w="100%" alignSelf="flex-start" alignItems="flex-start">
+            {commentData.map(comment => (
+              <Comment comment={comment} />
+            ))}
+          </Stack>
         </Flex>
-      </div>
+      </Stack>
     );
 }

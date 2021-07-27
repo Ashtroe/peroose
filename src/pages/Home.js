@@ -1,31 +1,26 @@
 import {React, useEffect, useState} from 'react'
-import { sortByNew, sortByScore } from '../util/sort'
+import { sortByNew, sortByOld, sortByScore } from '../util/sort'
 import { useAuth } from '../context/authContext'
+import useViewport from '../hooks/useViewport'
 import firebase from '../util/firebase'
-import Post from '../components/Post'
-import { DateTime } from 'luxon'
+import {BsFilterLeft} from 'react-icons/bs'
+import { GrNew } from "react-icons/gr"; 
+import { WiTime4 } from 'react-icons/wi'
+import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
+import PostMobile from '../components/PostMobile'
+import PostDesktop from '../components/PostDesktop'
 import {
-  Box,
   Button,
-  Flex,
   HStack,
   Link,
-  SimpleGrid,
-  Spacer,
   Stack,
-  Text,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuIcon,
-  MenuCommand,
-  MenuDivider,
-  ChevronDownIcon,
-  Spinner
+  Spinner,
+  IconButton,
+  MenuDivider
 } from "@chakra-ui/react";
 
 
@@ -36,63 +31,110 @@ export default function Home() {
     const [posts, setPosts] = useState(null)
     const [loading, setLoading] = useState(true)
     const {login, logout, user } = useAuth()
+    const { width } = useViewport()
 
     useEffect(() => {
-      db.collection("users")
+      user && db.collection("users")
         .where("email", "==", user.email)
         .get()
         .then((data) => {
           setUserData(data.docs[0].data());
         })
+
+        
     },[])
 
-    useEffect(()=>{
-     userData ? db.collection("posts")
-            .where("sub", "in", userData.subs)
-            .get()
-            .then((data) => {
-              let posts = data.docs.map((post) => ({
-                postID: post.id,
-                date: post.date,
-                ...post.data(),
-              }));
-              setPosts(posts);
-              setLoading(false);
-            }) : console.log('no user data');
-        },[userData]);
+    useEffect(() => {
+      if (userData) {
+        db.collection("posts")
+          .where("sub", "in", userData.subs)
+          .get()
+          .then((data) => {
+            let posts = data.docs.map((post) => ({
+              postID: post.id,
+              date: post.date,
+              ...post.data(),
+            }));
+            setPosts(posts); 
+            setLoading(false);
+          });
+      } else {
+        db.collection("posts")
+          .get()
+          .then((data) => {
+            let posts = data.docs.map((post) => ({
+              postID: post.id,
+              date: post.date,
+              ...post.data(),
+            }));
+            setPosts(posts);
+            setLoading(false);
+          });
+      }
+    }, [userData]);
 
-    return (
-      <Stack  direction={"column"} justify='center' align={"center"} >
-        <Stack>
-          <Menu>
-            <MenuButton as={Button} >
-              Home
-            </MenuButton>
-            <MenuList >
-              {userData && userData.subs.map(sub=>(
-                <Link href={`sub/${sub}`} key={sub}>
-                  <MenuItem key={`menuItem-${sub}`}>{sub}</MenuItem>
-                </Link>
-              ))}
-            </MenuList>
-          </Menu>
-
+    if(width>1024){
+      return (
+        <Stack  direction={"column"} justify='center' align={"center"} >
           <HStack>
-            <Button s='sm' onClick={()=>sortByNew(posts)}>New</Button>
-            <Button s='sm' onClick={()=>sortByScore(posts)}>Score</Button>
+            <Menu>
+              <MenuButton as={Button} >
+                Home
+              </MenuButton>
+              <MenuList >
+                {userData && userData.subs.map(sub=>(
+                  <Link href={`sub/${sub}`} key={sub}>
+                    <MenuItem key={`menuItem-${sub}`}>{sub}</MenuItem>
+                  </Link>
+                ))}
+              </MenuList>
+            </Menu>
+  
+            <Menu >
+              <MenuButton as={IconButton} icon={<BsFilterLeft/>}></MenuButton>
+              <MenuList >
+                <MenuItem  icon={<GrNew/>} onClick={()=>sortByNew(posts, setPosts)}>Newest</MenuItem>
+                <MenuItem  icon={<WiTime4/>} onClick={()=>sortByOld(posts, setPosts)}>Oldest</MenuItem>
+                <MenuDivider/>
+                <MenuItem  icon={<ArrowUpIcon/>} onClick={()=>sortByScore('ascend',posts,setPosts)}>Score Asc.</MenuItem>
+                <MenuItem  icon={<ArrowDownIcon/>} onClick={()=>sortByScore('descend',posts,setPosts)}>Score Desc.</MenuItem>
+              </MenuList>
+            </Menu>
+  
           </HStack>
+          {loading === false && posts? (
+            
+            posts.map((post) => {
+              return <PostDesktop key={post.id} post={post} />;
+            })
+            
+          ) : (
+            <Spinner/>
+          )}
+          <Link href="/create">New Post</Link>
+        </Stack>
+      );
+    }else{
+      return(
+        <Stack justify='center' align={"center"}>
+          {loading === false && posts? (
+            
+            posts.map((post) => {
+              return <PostMobile key={post.id} post={post} />;
+            })
+            
+          ) : (
+            <Spinner/>
+          )}
 
         </Stack>
-        {loading === false && posts? (
-          posts.map((post) => {
-            return <Post key={post.id} post={post} />;
-          })
-          
-        ) : (
-          <Spinner/>
-        )}
-        <Link href="/create">New Post</Link>
-      </Stack>
-    );
+      )
+    }
+
+    
+
+
+    
+    
 }
 

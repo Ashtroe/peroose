@@ -1,11 +1,9 @@
-import {useEffect, useState} from 'react'
+
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom"
-import firebase from './util/firebase'
 import { ChakraProvider } from "@chakra-ui/react"
 import { AuthProvider } from './context/authContext'
 import PrivateRoute from './components/PrivateRoute'
@@ -30,7 +28,6 @@ function App() {
 
       <Navbar />
       <Switch>
-            <PrivateRoute exact path="/home" component={Home}/>
             <PrivateRoute path="/create" component={Create}/>
             <PrivateRoute path="/account" component={Account}/>
             <Route path="/sub/:sub" component={SubPage}/>
@@ -38,7 +35,7 @@ function App() {
             <Route path="/signup" component={Signup}/>
             <Route path="/login" component={Login}/>
             <Route path="/forgot" component={Forgot}/>
-            <Route path="/" component={Landing}/>
+            <Route path="/" component={Home}/>
           </Switch>
       </Router>
     </ChakraProvider>

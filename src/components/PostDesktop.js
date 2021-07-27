@@ -5,7 +5,7 @@ import { DateTime } from 'luxon'
 import { Box, Spacer, Text, Stack, Link, Heading, HStack, IconButton, Image, } from '@chakra-ui/react'
 import { TriangleUpIcon, TriangleDownIcon, } from '@chakra-ui/icons'
 
-export default function Post(props) {
+export default function PostDesktop(props) {
   const [voted, setVoted] = useState(false)
     const db = firebase.firestore()
     const {user} = useAuth()
