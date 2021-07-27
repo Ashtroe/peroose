@@ -4,12 +4,14 @@ import firebase from '../util/firebase'
 import { DateTime } from 'luxon'
 import { Box, Spacer, Text, Stack, Link, Heading, HStack, IconButton, Image, } from '@chakra-ui/react'
 import { TriangleUpIcon, TriangleDownIcon, } from '@chakra-ui/icons'
+import { useHistory } from 'react-router-dom'
 
 export default function PostDesktop(props) {
   const [voted, setVoted] = useState(false)
     const db = firebase.firestore()
     const {user} = useAuth()
     
+    let history = useHistory()
     
     let post = props.post
 
@@ -61,7 +63,7 @@ export default function PostDesktop(props) {
               {post.sub}
             </Text>
           </Link>
-          <Link href={`post/${post.postID}`}>
+          <Link onClick={ ()=>history.push(`/post/${post.postID}`)}>
             <Heading fontSize={"2xl"} fontFamily={"body"}>
               {post.title}
             </Heading>

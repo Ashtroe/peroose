@@ -31,6 +31,7 @@ function App() {
             <PrivateRoute path="/create" component={Create}/>
             <PrivateRoute path="/account" component={Account}/>
             <Route path="/sub/:sub" component={SubPage}/>
+            <Route path="/sub/post/:post" component={PostPage}/>
             <Route path="/post/:post" component={PostPage}/>
             <Route path="/signup" component={Signup}/>
             <Route path="/login" component={Login}/>

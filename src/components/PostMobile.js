@@ -4,11 +4,14 @@ import firebase from '../util/firebase'
 import { DateTime } from 'luxon'
 import { Box, Spacer, Text, Stack, Link, Heading, HStack, IconButton, Image, } from '@chakra-ui/react'
 import { TriangleUpIcon, TriangleDownIcon, Icon, ChatIcon, } from '@chakra-ui/icons'
+import { useHistory } from 'react-router-dom'
 
 export default function PostMobile(props) {
     const [voted, setVoted] = useState(false)
     const db = firebase.firestore()
     const {user} = useAuth()
+
+    let history = useHistory()
 
     
     
@@ -50,7 +53,7 @@ export default function PostMobile(props) {
       >
         
         <Stack>
-          <Link href={`/sub/${post.sub}`}>
+          <Link onClick={ ()=>history.push(`/sub/${post.sub}`)}>
             <Text
               color={"green.500"}
               textTransform={"uppercase"}
@@ -61,7 +64,7 @@ export default function PostMobile(props) {
               {post.sub}
             </Text>
           </Link>
-          <Link href={`post/${post.postID}`}>
+          <Link onClick={ ()=>history.push(`/post/${post.postID}`)}>
             <Heading fontSize={"2xl"} fontFamily={"body"}>
               {post.title}
             </Heading>
