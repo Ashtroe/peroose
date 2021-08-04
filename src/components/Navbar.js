@@ -30,7 +30,8 @@ import {
     AccordionPanel,
     AccordionItem,
     Divider,
-    Spacer
+    Spacer,
+    Image
   } from "@chakra-ui/react";
 import { EditIcon, HamburgerIcon } from '@chakra-ui/icons';
 
@@ -75,32 +76,46 @@ export default function Navbar() {
                 </Link>
               </>
             ) : (
-              <Menu>
-                <Avatar
-                  as={MenuButton}
-                  m="1rem"
-                  position="absolute"
-                  right={3}
-                  width="10"
-                  height="10"
-                  top="2"
-                />
-                <MenuList display="flex" flexDir="column" alignItems="center">
-                  <Link to="/account" display="flex" justifyContent="center">
-                    Account
-                  </Link>
-                  <Button
-                    colorScheme="red"
-                    mt="1rem"
-                    width={"60%"}
-                    display="flex"
-                    justifyContent="center"
-                    onClick={() => logout()}
-                  >
-                    Logout
-                  </Button>
-                </MenuList>
-              </Menu>
+              <HStack 
+              position='relative' 
+              width='full' 
+              height='fit-content'
+              pl={3}
+              pr={3}
+              justify='space-between'
+              
+              >
+                <Link href='/'>
+                  <Image 
+                  src='/img/logo.png' 
+                  width={100}
+                  />
+                </Link>
+                <Menu>
+                  <Avatar
+                    as={MenuButton}
+                    m="1rem"
+                    width="10"
+                    height="10"
+                    top="2"
+                  />
+                  <MenuList display="flex" flexDir="column" alignItems="center">
+                    <Link to="/account" display="flex" justifyContent="center" fontWeight='semibold'>
+                      Edit Account
+                    </Link>
+                    <Button
+                      colorScheme="red"
+                      mt="1rem"
+                      width={"60%"}
+                      display="flex"
+                      justifyContent="center"
+                      onClick={() => logout()}
+                    >
+                      Logout
+                    </Button>
+                  </MenuList>
+                </Menu>
+              </HStack>
             )}
           </HStack>
         ) : (
@@ -122,43 +137,47 @@ export default function Navbar() {
               <DrawerContent pt={5}>
                 <DrawerCloseButton />
 
-                <DrawerBody position='relative'>
+                <DrawerBody position="relative">
                   <VStack>
-                    {!user ? <VStack>
-                      <Accordion>
-                        <AccordionButton>
-                          Popular Subs
-                          <AccordionIcon/>
-                        </AccordionButton>
-                      </Accordion>
-                      
-
-                    </VStack> :
-                    <VStack>
-                      <Accordion allowToggle={true}>
-                        <AccordionItem>
+                    {!user ? (
+                      <VStack>
+                        <Accordion>
                           <AccordionButton>
-                            Your subs
-                            <AccordionIcon/>
+                            Popular Subs
+                            <AccordionIcon />
                           </AccordionButton>
-                          {userData && userData.subs.map(sub=>(
-                            <AccordionPanel>
-                              <Link href={`/sub/${sub}`}>{sub}</Link>
-                            </AccordionPanel>
-                          ))}
-                        </AccordionItem>
-                      </Accordion>
-                      <Link href='/account' >Account</Link>
-                      
-                    </VStack>
-                    }
-                    <Button colorScheme='blue' rightIcon={<EditIcon/>}><Link href='/create'>Post</Link></Button>
+                        </Accordion>
+                      </VStack>
+                    ) : (
+                      <VStack>
+                        <Link href="/home">Home</Link>
+                        <Accordion allowToggle={true}>
+                          <AccordionItem>
+                            <AccordionButton>
+                              Your subs
+                              <AccordionIcon />
+                            </AccordionButton>
+                            {userData &&
+                              userData.subs.map((sub) => (
+                                <AccordionPanel>
+                                  <Link href={`/sub/${sub}`}>{sub}</Link>
+                                </AccordionPanel>
+                              ))}
+                          </AccordionItem>
+                        </Accordion>
+                        <Link href="/account">Account</Link>
+                      </VStack>
+                    )}
+                    <Link href="/create">
+                      <Button colorScheme="blue" rightIcon={<EditIcon />}>
+                        Post
+                      </Button>
+                    </Link>
                   </VStack>
                 </DrawerBody>
 
-                <DrawerFooter display='flex' justifyContent='center'>
-                  <Button colorScheme='red' >Logout</Button>
-
+                <DrawerFooter display="flex" justifyContent="center">
+                  <Button colorScheme="red">Logout</Button>
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>

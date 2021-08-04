@@ -48,7 +48,6 @@ export default function PostMobile(props) {
         boxShadow={"lg"}
         rounded={"md"}
         p={6}
-        m={10}
         overflow={"hidden"}
       >
         

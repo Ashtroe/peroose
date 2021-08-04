@@ -12,6 +12,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "firebase": "^8.7.1",
+    "firebase-admin": "^9.11.0",
     "firebaseui": "^4.8.0",
     "framer-motion": "^4.1.17",
     "luxon": "^2.0.1",

@@ -30,11 +30,14 @@ export default function SubComment({comment}) {
     return (
       <Stack
         key={id}
+        width='full'
         spacing={0}
-        pl={5}
-        mb={2}
+        p={2}
+        pb={0}
         alignSelf="flex-start"
-        borderLeft={"2px solid"}
+        bg='gray.50'
+        borderLeft='2px solid '
+        borderColor='blue.200'
       >
         <Text fontSize="xs" textAlign="left">
           {DateTime.fromSeconds(time.seconds).toLocaleString(

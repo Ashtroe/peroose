@@ -6,11 +6,13 @@ import firebase from '../util/firebase'
 import {BsFilterLeft} from 'react-icons/bs'
 import { GrNew } from "react-icons/gr"; 
 import { WiTime4 } from 'react-icons/wi'
-import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
+import { ArrowDownIcon, ArrowUpIcon, EditIcon, SunIcon } from '@chakra-ui/icons'
 import PostMobile from '../components/PostMobile'
 import PostDesktop from '../components/PostDesktop'
 import {
+  Box,
   Button,
+  Heading,
   HStack,
   Link,
   Stack,
@@ -20,18 +22,35 @@ import {
   MenuItem,
   Spinner,
   IconButton,
-  MenuDivider
+  MenuDivider,
+  ButtonGroup,
+  useBoolean,
+  Flex,
+  VStack,
+  Divider
 } from "@chakra-ui/react";
+import { useHistory } from 'react-router-dom'
 
 
 export default function Home() {
     const db = firebase.firestore()
     const storage = firebase.storage()
+
     const [userData, setUserData] = useState(null)
     const [posts, setPosts] = useState(null)
     const [loading, setLoading] = useState(true)
+
+    const [filterNew, setFilterNew] = useState(false)
+    const [filterHot, setFilterHot] = useState(false)
+    const [filterTop, setFilterTop] = useState(false)
+    const [filterCont, setFilterCont] = useState(false)
+    
     const {login, logout, user } = useAuth()
+
     const { width } = useViewport()
+
+    const history = useHistory()
+
 
     useEffect(() => {
       user && db.collection("users")
@@ -73,50 +92,86 @@ export default function Home() {
       }
     }, [userData]);
 
-    if(width>1024){
+    
+
+    if(width>960){
       return (
-        <Stack  direction={"column"} justify='center' align={"center"} >
-          <HStack>
-            <Menu>
-              <MenuButton as={Button} >
-                Home
-              </MenuButton>
-              <MenuList >
-                {userData && userData.subs.map(sub=>(
-                  <Link href={`sub/${sub}`} key={sub}>
-                    <MenuItem key={`menuItem-${sub}`}>{sub}</MenuItem>
-                  </Link>
-                ))}
-              </MenuList>
-            </Menu>
-  
-            <Menu >
-              <MenuButton as={IconButton} icon={<BsFilterLeft/>}></MenuButton>
-              <MenuList >
-                <MenuItem  icon={<GrNew/>} onClick={()=>sortByNew(posts, setPosts)}>Newest</MenuItem>
-                <MenuItem  icon={<WiTime4/>} onClick={()=>sortByOld(posts, setPosts)}>Oldest</MenuItem>
-                <MenuDivider/>
-                <MenuItem  icon={<ArrowUpIcon/>} onClick={()=>sortByScore('ascend',posts,setPosts)}>Score Asc.</MenuItem>
-                <MenuItem  icon={<ArrowDownIcon/>} onClick={()=>sortByScore('descend',posts,setPosts)}>Score Desc.</MenuItem>
-              </MenuList>
-            </Menu>
-  
-          </HStack>
-          {loading === false && posts? (
-            
+        <Flex justifyContent='center' mt={5}>
+          <Stack direction={"column"} justify="center" align={"center"}>
+            <ButtonGroup>
+              <Button
+                isActive={filterNew}
+                leftIcon={<SunIcon />}
+                onClick={() => {
+                  setFilterNew(true);
+                  setFilterHot(false);
+                  setFilterTop(false);
+                  setFilterCont(false);
+                  sortByNew(posts, setPosts);
+                }}
+              >New
+              </Button>
+
+              <Button
+                isActive={filterTop}
+                leftIcon={<ArrowUpIcon />}
+                onClick={() => {
+                  setFilterNew(false);
+                  setFilterHot(false);
+                  setFilterTop(true);
+                  setFilterCont(false);
+                  sortByScore("ascend", posts, setPosts);
+                }}
+              >
+                Top
+              </Button>
+
+              <Button
+                isActive={filterCont}
+                leftIcon={<ArrowDownIcon />}
+                onClick={() => {
+                  setFilterNew(false);
+                  setFilterHot(false);
+                  setFilterTop(false);
+                  setFilterCont(true);
+                  sortByScore('descend',posts, setPosts);
+                }}
+              >
+                Controversial
+              </Button>
+            </ButtonGroup>
+          {loading === false && posts ? (
             posts.map((post) => {
               return <PostDesktop key={post.id} post={post} />;
             })
-            
           ) : (
-            <Spinner/>
+            <Spinner />
           )}
-          <Link href="/create">New Post</Link>
         </Stack>
+          <Stack align='center' height='fit-content' ml={10}>
+            <Stack 
+              align='center'
+              width='xs'
+              height='fit-content'
+              
+              p={5}
+              bg='gray.50'
+              rounded={"md"}
+            >
+              <Heading>Subs</Heading>
+              {userData && userData.subs.map(sub=>(
+                <Link fontWeight='semibold' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
+              ))}
+            </Stack>
+            <Button as={Link} href='/create' size='lg' colorScheme='blue' rightIcon={<EditIcon/>}>Post</Button>
+
+          </Stack>
+
+        </Flex>
       );
     }else{
       return(
-        <Stack justify='center' align={"center"}>
+        <Stack justify='center' align={"center"} p={5}>
           {loading === false && posts? (
             
             posts.map((post) => {

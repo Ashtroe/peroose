@@ -10,7 +10,10 @@ import {
   InputGroup,
   Textarea,
   Alert, 
-  AlertIcon
+  AlertIcon,
+  Select,
+  Box,
+  Stack
 } from "@chakra-ui/react";
 
 export default function Create() {
@@ -40,19 +43,20 @@ export default function Create() {
             setError('Title cannot be empty')
         }else{
             db.collection('posts')
-          .add({
-            sub:subRef.current.value,
-            user:userData.username,
-            body: bodyRef.current.value,
-            img:imgRef.current.value,
-            score: 1,
-            time: new Date()
-            
-          })
-          .then((response)=>window.location.href = `/post/${response.id}`)
-          .catch((err)=>{
-              setError(err)
-          })
+                .add({
+                  sub:subRef.current.value,
+                  title:titleRef.current.value,
+                  user:userData.username,
+                  body: bodyRef.current.value,
+                  img:imgRef.current.value,
+                  score: 1,
+                  date: new Date()
+                
+                })
+                .then((response)=>window.location.href = `/post/${response.id}`)
+                .catch((err)=>{
+                    setError(err)
+                })
         }
         
     }
@@ -64,8 +68,16 @@ export default function Create() {
                 {error}
 
             </Alert>}
+            <Stack p={5}>
             <FormControl isRequired>
-                <Input placeholder='Sub' ref={subRef} />
+                <Select placeholder='Sub' ref={subRef} >
+                    <option value='Art'>Art</option>
+                    <option value='Cars'>Cars</option>
+                    <option value='Funny'>Funny</option>
+                    <option value='Gaming'>Gaming</option>
+                    <option value='Science'>Science</option>
+                    <option value='Technology'>Technology</option>
+                </Select>
             </FormControl>
             <FormControl isRequired>
                 <Input placeholder='Post title' ref={titleRef} />
@@ -76,7 +88,9 @@ export default function Create() {
             <FormControl isRequired>
                 <Textarea placeholder='Write post here' ref={bodyRef} />
             </FormControl>
-            <Button type='submit'>Create Post</Button>
+            <Button colorScheme='blue' type='submit'>Create Post</Button>
+
+            </Stack>
         </form>
     )
 }

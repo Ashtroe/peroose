@@ -5,10 +5,10 @@ export const sortByScore = (direction,posts,setPosts) => {
     case 'ascend':
       let ascending = (a, b) => {
         if (a.score < b.score) {
-          return -1;
+          return 1;
         }
         if (a.score > b.score) {
-          return 1;
+          return -1;
         }
         return 0;
       };
@@ -18,10 +18,10 @@ export const sortByScore = (direction,posts,setPosts) => {
     case 'descend':
       let descending = (a, b) => {
         if (a.score < b.score) {
-          return 1;
+          return -1;
         }
         if (a.score > b.score) {
-          return -1;
+          return 1;
         }
         return 0;
       };

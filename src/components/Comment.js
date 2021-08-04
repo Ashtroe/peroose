@@ -24,12 +24,15 @@ import {
   Stack
 } from "@chakra-ui/react";
 
-export default function Comment({comment}) {
+export default function Comment({comment}, isSub) {
 
     const {id, user, body, subComments, time, } = comment
+    
+    
 
     return (
-        <Stack key={id} spacing={0} mb={2} alignSelf="flex-start">
+      <>
+        <Stack key={id} spacing={0} mb={2} alignSelf="flex-start"  width='full' borderRadius={5} bg='gray.50'>
                 <Text fontSize="xs" textAlign="left">
                   {DateTime.fromSeconds(time.seconds).toLocaleString(
                     DateTime.DATE_SHORT
@@ -58,7 +61,8 @@ export default function Comment({comment}) {
                 </HStack>
                 
                 {/* SubComments  */}
-                {subComments && subComments.map(comment=><SubComment comment={comment}/>)}
               </Stack>
+                {subComments && subComments.map(comment=><SubComment comment={comment}/>)}
+                </>
     )
 }
