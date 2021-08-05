@@ -24,7 +24,7 @@ import {
   Stack
 } from "@chakra-ui/react";
 
-export default function Comment({comment}, isSub) {
+export default function Comment({comment}) {
 
     const {id, user, body, subComments, time, } = comment
     
@@ -32,7 +32,7 @@ export default function Comment({comment}, isSub) {
 
     return (
       <>
-        <Stack key={id} spacing={0} mb={2} alignSelf="flex-start"  width='full' borderRadius={5} bg='gray.50'>
+        <Stack key={id} spacing={0} pl={2} alignSelf="flex-start"  width='full' borderRadius={5} bg='gray.50'>
                 <Text fontSize="xs" textAlign="left">
                   {DateTime.fromSeconds(time.seconds).toLocaleString(
                     DateTime.DATE_SHORT

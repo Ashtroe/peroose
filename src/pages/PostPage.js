@@ -1,4 +1,5 @@
 import {React, useEffect, useState, useRef} from 'react'
+import { useHistory } from 'react-router'
 import useViewport from '../hooks/useViewport'
 import Comment from '../components/Comment'
 import { useParams } from 'react-router'
@@ -16,7 +17,8 @@ import {
   Image,
   HStack,
   IconButton,
-  Stack
+  Stack,
+  Link
 } from "@chakra-ui/react";
 
 
@@ -24,6 +26,8 @@ export default function PostPage() {
     const db = firebase.firestore()
     const { post } = useParams()
     const { user } = useAuth()
+
+    const history = useHistory()
 
     const { width } = useViewport()
     
@@ -116,15 +120,16 @@ export default function PostPage() {
       )
     }
 
-    if(!postLoading && postData && width<=960){
+    if(!postLoading && postData && width <= 960){
       return (
-        <Stack align='center' p={5}>
+        <Stack align='center' p={2}>
           <Flex direction="column" pl={5} pr={5}>
             <Heading mb={2} size="lg">
               {postData.title}
             </Heading>
             {postData.img && <Image src={postData.img} boxSize='fit-content' fit='contain' />}
             <Text>{postData.body}</Text>
+            <Link>{postData.sub}</Link>
           </Flex>
           <HStack
             w="90%"
@@ -180,6 +185,81 @@ export default function PostPage() {
             Reply
           </Button>
           <Stack w="100%" alignSelf="flex-start" alignItems="flex-start">
+            {commentData.length > 0 && commentData.map(comment => (
+              <Comment comment={comment} isSub={false} />
+            ))}
+            {commentData <= 0 && <Text alignSelf='center' textAlign='center' color='gray.300'>No Comments yet</Text>}
+          </Stack>
+        </Flex>
+      </Stack>
+      )
+    }
+
+    if(!postLoading && postData && width > 960){
+      return (
+        <Stack align='center' p={150} pt={5}>
+          <Flex direction="column" width='full' >
+            <Link onClick={()=>history.push(`/sub/${postData.sub}`)}>{postData.sub}</Link>
+            <Heading mb={2} size="lg">
+              {postData.title}
+            </Heading>
+            {postData.img && <Image src={postData.img} boxSize='fit-content' fit='contain' />}
+            <Text>{postData.body}</Text>
+          </Flex>
+          <HStack
+            w="full"
+            spacing={2}
+            p={1}
+            borderTop="2px solid"
+            borderBottom="2px solid"
+            borderColor="gray.200"
+          >
+            <IconButton
+              aria-label="Upvote post"
+              size="lg"
+              colorScheme={"blue"}
+              icon={<TriangleUpIcon />}
+              variant='ghost'
+              isDisabled={!voted ? false : true}
+              onClick={() => {
+                upvote();
+              }}
+            />
+            <Text>{postData.score}</Text>
+            <IconButton
+              aria-label="Downvote post"
+              size="lg"
+              colorScheme={"red"}
+              icon={<TriangleDownIcon />}
+              variant='ghost'
+              isDisabled={!voted ? false : true}
+              onClick={() => {
+                downVote();
+              }}
+            />
+            <IconButton
+              aria-label="Reply"
+              size="lg"
+              ml={10}
+              icon={<BsReplyFill />}
+              variant='ghost'
+              onClick={() => setReplyDisplay("block")}
+            />
+          </HStack>
+          <Flex w="100%" alignItems="center" direction="column" p={0}>
+          <Textarea
+            w="xs"
+            minH="10"
+            pb={1}
+            placeholder="Enter your Reply here"
+            variant="filled"
+            display={replyDisplay}
+            ref={replyRef}
+          />
+          <Button mt={3} display={replyDisplay} onClick={postReply}>
+            Reply
+          </Button>
+          <Stack w="full" alignSelf="flex-start" alignItems="flex-start">
             {commentData.length > 0 && commentData.map(comment => (
               <Comment comment={comment} isSub={false} />
             ))}
