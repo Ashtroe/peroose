@@ -3,7 +3,7 @@ import { useHistory } from 'react-router'
 import firebase from '../util/firebase'
 import React from 'react'
 import { useAuth } from '../context/authContext'
-import { Box, FormLabel, Input, Stack, Alert, AlertIcon, FormControl, FormHelperText, Button, Link,  } from '@chakra-ui/react'
+import { Box, FormLabel, Input, Alert, AlertIcon, FormControl, FormHelperText, Button, Link, Stack,  } from '@chakra-ui/react'
 
 
 export default function Login() {
@@ -27,30 +27,51 @@ export default function Login() {
         })
     }
     return (
-        <Box>
-            <form onSubmit={handleSubmit}>
-                {error && 
-                    <Alert status='error'>
+        <Stack 
+            overflowY='hidden'
+            width='full' 
+            height={'100vh-64'}
+            justify='center'
+            align='center'
+            p={50}
+        >
+            <Box 
+                height='fit-content'
+                width='30%'
+                p={10}
+                display='flex'
+                flexDirection='column'
+                alignItems='center'
+                justifyContent='center'
+                boxShadow={"lg"}
+                rounded={"md"}
+                bg='white'
+            >
+               
+
+            {error && <Alert status='error'>
                         <AlertIcon/>
-                        {error}
-                
+                        {error}   
                     </Alert>}
-                <FormControl id="email" isRequired>
+
+            <FormControl id="email" isRequired>
                 <FormLabel>Email address</FormLabel>
                 <Input type="email" ref={emailRef}/>
                 <FormHelperText>We'll never share your email.</FormHelperText>
-                </FormControl>
-                
-                <FormControl isRequired>
+            </FormControl>
+            
+            <FormControl isRequired>
                 <FormLabel>Password</FormLabel>
                 <Input type="password" ref={passwordRef} isRequired/>
-                </FormControl>
-                
-                <Button type={'submit'}>Log In</Button>
-            </form>
+            </FormControl>
+            
+            <Button onClick={handleSubmit} mt={5} colorScheme='blue'>Log In</Button>
 
-            <Link href={'/forgot'}>Forgot password?</Link>
-        </Box>
+            </Box>
+            <Link href='/forgot' size='md'  fontWeight='semibold' color='white'>Forgot password?</Link>
+            
+        </Stack>
+        
         
     )
 }

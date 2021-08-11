@@ -2,7 +2,6 @@ import {React, useEffect, useState, useRef} from 'react'
 import useViewport from '../hooks/useViewport'
 import { useAuth } from '../context/authContext'
 import firebase from '../util/firebase'
-
 import {
     Button,
     Flex,
@@ -31,7 +30,8 @@ import {
     AccordionItem,
     Divider,
     Spacer,
-    Image
+    Image,
+    ButtonGroup
   } from "@chakra-ui/react";
 import { EditIcon, HamburgerIcon } from '@chakra-ui/icons';
 
@@ -55,71 +55,95 @@ export default function Navbar() {
 
         
     },[])
-    
-    return (
-      <>
-        {width >= 1024 ? (
-          <HStack spacing={3} p={1} as="nav" justify="center" align="center">
-            {!user ? (
-              <>
-                <Link href="/home">
-                  <Text fontSize="lg">Home</Text>
-                </Link>
-                <Link href="/signup">
-                  <Text fontSize="lg">sign up</Text>
-                </Link>
-                <Link href="/account">
-                  <Text fontSize="lg">account</Text>
-                </Link>
-                <Link right={2} position={"absolute"} href="/login">
-                  SignIn
-                </Link>
-              </>
-            ) : (
-              <HStack 
-              position='relative' 
-              width='full' 
-              height='fit-content'
-              pl={3}
-              pr={3}
-              justify='space-between'
-              
-              >
-                <Link href='/'>
-                  <Image 
-                  src='/img/logo.png' 
-                  width={100}
-                  />
-                </Link>
-                <Menu>
-                  <Avatar
-                    as={MenuButton}
-                    m="1rem"
-                    width="10"
-                    height="10"
-                    top="2"
-                  />
-                  <MenuList display="flex" flexDir="column" alignItems="center">
-                    <Link to="/account" display="flex" justifyContent="center" fontWeight='semibold'>
-                      Edit Account
-                    </Link>
-                    <Button
-                      colorScheme="red"
-                      mt="1rem"
-                      width={"60%"}
-                      display="flex"
-                      justifyContent="center"
-                      onClick={() => logout()}
-                    >
-                      Logout
-                    </Button>
-                  </MenuList>
-                </Menu>
-              </HStack>
-            )}
-          </HStack>
-        ) : (
-          <Flex direction="column" mt={5}>
+
+    // Desktop Not Signed In
+    if (width >=1024 && !user){
+      return(
+        <HStack
+        position='relative'
+        width='full'
+        height='fit-content'
+        p={3}
+        justify='space-between'
+        bg='white'
+        >
+        
+
+        <Link href='/'>
+          <Image
+            src='/img/logo.png'
+            width={100}
+          />
+        </Link>
+
+        <ButtonGroup>
+          <Button variant='ghost'>
+            <Link href="/login">
+              Log In
+            </Link>
+          </Button>
+          <Button variant='outline' colorScheme='blue'>
+            <Link href="/signup">
+              Sign Up
+            </Link>
+          </Button>
+        </ButtonGroup>
+
+      </HStack>
+      )
+      
+    }
+
+    // Desktop signed in
+    if (width >=1024 && user){
+      return(
+        <HStack
+        position='relative'
+        width='full'
+        height='fit-content'
+        p={3}
+        justify='space-between'
+      >
+        <Link href='/'>
+          <Image
+            src='/img/logo.png'
+            width={100}
+          />
+        </Link>
+        <Menu>
+          <Avatar
+            as={MenuButton}
+            m="1rem"
+            width="10"
+            height="10"
+            top="2"
+          />
+          <MenuList display="flex" flexDir="column" alignItems="center">
+            <Link to="/account" display="flex" justifyContent="center" fontWeight='semibold'>
+              Edit Account
+            </Link>
+            <Button
+              colorScheme="red"
+              mt="1rem"
+              width={"60%"}
+              display="flex"
+              justifyContent="center"
+              onClick={() => logout()}
+            >
+              Logout
+            </Button>
+          </MenuList>
+        </Menu>
+      </HStack>
+      )
+      
+
+    }
+
+    // Mobile
+    if (width < 1024){
+      return(
+        <Flex direction="column" mt={5}>
             <IconButton
               icon={<HamburgerIcon />}
               ref={btnRef}
@@ -182,7 +206,6 @@ export default function Navbar() {
               </DrawerContent>
             </Drawer>
           </Flex>
-        )}
-      </>
-    );
+      )
+    }
 }
