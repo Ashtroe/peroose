@@ -165,12 +165,17 @@ export default function Navbar() {
                   <VStack>
                     {!user ? (
                       <VStack>
-                        <Accordion>
-                          <AccordionButton>
-                            Popular Subs
-                            <AccordionIcon />
-                          </AccordionButton>
-                        </Accordion>
+                        <Link href="/home">Home</Link>
+                        <Link href="/signup">
+                          <Button colorScheme="blue" >
+                            Sign Up
+                          </Button>
+                        </Link>
+                        <Link href="/login">
+                          <Button colorScheme="blue" variant='ghost' >
+                            Log In
+                          </Button>
+                        </Link>
                       </VStack>
                     ) : (
                       <VStack>
@@ -190,13 +195,13 @@ export default function Navbar() {
                           </AccordionItem>
                         </Accordion>
                         <Link href="/account">Account</Link>
+                        <Link href="/create">
+                          <Button colorScheme="blue" rightIcon={<EditIcon />}>
+                            Post
+                          </Button>
+                        </Link>
                       </VStack>
                     )}
-                    <Link href="/create">
-                      <Button colorScheme="blue" rightIcon={<EditIcon />}>
-                        Post
-                      </Button>
-                    </Link>
                   </VStack>
                 </DrawerBody>
 
