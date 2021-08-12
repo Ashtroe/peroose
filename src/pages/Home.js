@@ -57,7 +57,7 @@ export default function Home() {
         .where("email", "==", user.email)
         .get()
         .then((data) => {
-          setUserData(data.docs[0].data());
+          data.docs[0] && setUserData(data.docs[0].data());
         })
 
         

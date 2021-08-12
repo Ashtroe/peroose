@@ -7,7 +7,7 @@ import { Box, FormLabel, Input, Alert, AlertIcon, FormControl, FormHelperText, B
 
 
 export default function Login() {
-    const { login, user } = useAuth()
+    const { login, demoLogin } = useAuth()
     const [error, setError] = useState(null)
     const emailRef = useRef(null)
     const passwordRef = useRef(null)
@@ -17,6 +17,19 @@ export default function Login() {
         setError(null)
         e.preventDefault()
         login(emailRef.current.value, passwordRef.current.value)
+        .then(()=>{
+            history.push('/home')
+        })
+        .catch(err=>{
+            if(err){
+                setError(err.message)            
+            }
+        })
+    }
+    let handleSubmitDemo = (e) =>{
+        setError(null)
+        e.preventDefault()
+        demoLogin()
         .then(()=>{
             history.push('/home')
         })
@@ -66,6 +79,7 @@ export default function Login() {
             </FormControl>
             
             <Button onClick={handleSubmit} mt={5} colorScheme='blue'>Log In</Button>
+            <Button onClick={handleSubmitDemo} mt={5} colorScheme='blue'>Demo</Button>
 
             </Box>
             <Link href='/forgot' size='md'  fontWeight='semibold' color='white'>Forgot password?</Link>

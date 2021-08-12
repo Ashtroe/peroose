@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/authContext'
+import { useHistory } from 'react-router'
 import firebase from '../util/firebase'
 import { DateTime } from 'luxon'
 import {
@@ -19,6 +20,8 @@ import {
 export default function Create() {
     const db = firebase.firestore()
     const { user } = useAuth()
+
+    const history = useHistory()
 
     const [userData, setUserData] = useState(null)
     const [error, setError] = useState(null)
@@ -53,7 +56,7 @@ export default function Create() {
                   date: new Date()
                 
                 })
-                .then((response)=>window.location.href = `/post/${response.id}`)
+                .then((response)=>history.push(`/post/${response.id}`))
                 .catch((err)=>{
                     setError(err)
                 })

@@ -29,6 +29,10 @@ export  function AuthProvider({children}) {
         return auth.signInWithEmailAndPassword(email, password)  
     }
 
+    let demoLogin = async (email,password) =>{
+        return auth.signInWithEmailAndPassword('demo@demo.com', 'DemoPassword')  
+    }
+
     let logout = async () =>{
         return auth.signOut()
     }
@@ -44,6 +48,7 @@ export  function AuthProvider({children}) {
     const value = {
         user,
         signup,
+        demoLogin,
         login,
         logout, 
         resetPassword,

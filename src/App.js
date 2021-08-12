@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect
 } from "react-router-dom"
 import { ChakraProvider } from "@chakra-ui/react"
 import { AuthProvider } from './context/authContext'
@@ -36,7 +37,8 @@ function App() {
             <Route path="/signup" component={Signup}/>
             <Route path="/login" component={Login}/>
             <Route path="/forgot" component={Forgot}/>
-            <Route path="/" component={Home}/>
+            <Route path="/home" component={Home}/>
+            <Redirect exact from='/' to='/home'/>
           </Switch>
       </Router>
     </ChakraProvider>

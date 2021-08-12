@@ -12,6 +12,8 @@ import {
     Text,
     Alert,
     AlertIcon,
+    Stack,
+    Link
   } from "@chakra-ui/react"
 
 
@@ -43,9 +45,9 @@ export default function Signup() {
         .then((response)=>{
             db.collection('users')
                 .add({
-                    email:emailRef.current.value,
+                    email:emailRef.current.value.toLowerCase(),
                     username:usernameRef.current.value,
-                    subs:['First_sub', 'Second_sub', 'Third_sub'],
+                    subs:['Funny'],
                     comments:[],
                     posts:[],
                 })
@@ -59,32 +61,55 @@ export default function Signup() {
     }
     
     return (
-    <form onSubmit={handleSubmit}>
-        
-        {error && 
-            <Alert status='error'>
-                <AlertIcon/>
-                {error}
+        <Stack 
+            overflowY='hidden'
+            width='full' 
+            height={'100vh-64'}
+            justify='center'
+            align='center'
+            p={50}
+        >
+            <Box 
+                height='fit-content'
+                width='30%'
+                p={10}
+                display='flex'
+                flexDirection='column'
+                alignItems='center'
+                justifyContent='center'
+                boxShadow={"lg"}
+                rounded={"md"}
+                bg='white'
+            >
+               
 
-            </Alert>}
-        <FormControl id="email" isRequired>
-        <FormLabel>Email address</FormLabel>
-        <Input type="email" ref={emailRef}/>
-        <FormHelperText>We'll never share your email.</FormHelperText>
-        </FormControl>
+            {error && <Alert status='error'>
+                        <AlertIcon/>
+                        {error}   
+                    </Alert>}
+                    <FormControl isRequired>
 
-        <FormControl isRequired>
-        <FormLabel>Username</FormLabel>
-        <Input type="text" ref={usernameRef} isRequired/>
-        </FormControl>
+            <FormControl id="email" isRequired>
+                <FormLabel>Email address</FormLabel>
+                <Input type="email" ref={emailRef}/>
+                <FormHelperText>We'll never share your email.</FormHelperText>
+            </FormControl>
+            
+            <FormLabel>Username</FormLabel>
+                <Input type="text" ref={usernameRef} isRequired/>
+            </FormControl>
 
-        <FormControl isRequired>
-        <FormLabel>Password</FormLabel>
-        <Input type="password" ref={passwordRef} isRequired/>
-        </FormControl>
+            <FormControl isRequired>
+                <FormLabel>Password</FormLabel>
+                <Input type="password" ref={passwordRef} isRequired/>
+            </FormControl>
+            
+            <Button onClick={handleSubmit} mt={5} colorScheme='blue'>Sign Up</Button>
 
-        <Button type={'submit'}>Sign Up</Button>
-    </form>
+            </Box>
+            <Link href='/forgot' size='md'  fontWeight='semibold' color='white'>Forgot password?</Link>
+            
+        </Stack>
     
     )
 }

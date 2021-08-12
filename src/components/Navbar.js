@@ -1,4 +1,5 @@
 import {React, useEffect, useState, useRef} from 'react'
+import { useHistory } from 'react-router'
 import useViewport from '../hooks/useViewport'
 import { useAuth } from '../context/authContext'
 import firebase from '../util/firebase'
@@ -43,14 +44,17 @@ export default function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = useRef()
 
+    const history = useHistory()
+
     const [userData, setUserData] = useState()
 
     useEffect(() => {
       user && db.collection("users")
-        .where("email", "==", user.email)
+        .where("email", "==", user.email.toLowerCase())
         .get()
         .then((data) => {
-          setUserData(data.docs[0].data());
+          
+          data.docs[0] && setUserData(data.docs[0].data());
         })
 
         
@@ -119,6 +123,8 @@ export default function Navbar() {
             top="2"
           />
           <MenuList display="flex" flexDir="column" alignItems="center">
+            <Text fontSize='xl' fontWeight='bold' color='blue.600'>{userData && userData.username}</Text>
+            <Divider/>
             <Link to="/account" display="flex" justifyContent="center" fontWeight='semibold'>
               Edit Account
             </Link>
@@ -128,7 +134,7 @@ export default function Navbar() {
               width={"60%"}
               display="flex"
               justifyContent="center"
-              onClick={() => logout()}
+              onClick={() => (logout(), window.location.reload())}
             >
               Logout
             </Button>
