@@ -1,12 +1,11 @@
 import {React, useEffect, useState} from 'react'
+import { useHistory } from 'react-router-dom'
 import { sortByNew, sortByOld, sortByScore } from '../util/sort'
 import { useAuth } from '../context/authContext'
 import useViewport from '../hooks/useViewport'
 import firebase from '../util/firebase'
-import {BsFilterLeft} from 'react-icons/bs'
-import { GrNew } from "react-icons/gr"; 
-import { WiTime4 } from 'react-icons/wi'
-import { ArrowDownIcon, ArrowUpIcon, EditIcon, SunIcon } from '@chakra-ui/icons'
+import { MdDirectionsCar } from 'react-icons/md'
+import { ArrowDownIcon, ArrowUpIcon, EditIcon, Icon, SunIcon } from '@chakra-ui/icons'
 import PostMobile from '../components/PostMobile'
 import PostDesktop from '../components/PostDesktop'
 import {
@@ -27,9 +26,9 @@ import {
   useBoolean,
   Flex,
   VStack,
-  Divider
+  Divider,
+  Image
 } from "@chakra-ui/react";
-import { useHistory } from 'react-router-dom'
 
 
 export default function Home() {
@@ -38,6 +37,7 @@ export default function Home() {
 
     const [userData, setUserData] = useState(null)
     const [posts, setPosts] = useState(null)
+    const [subs, setSubs] = useState(null)
     const [loading, setLoading] = useState(true)
 
     const [filterNew, setFilterNew] = useState(false)
@@ -92,11 +92,21 @@ export default function Home() {
       }
     }, [userData]);
 
+    // Get all subs 
+    useEffect(()=>{
+      db.collection('subs')
+      .get()
+      .then((data)=>{
+        let allSubs = data.docs.map((sub)=>sub.id)
+        setSubs(allSubs)
+      })
+    },[])
+
     
 
     if(width>960){
       return (
-        <Flex justifyContent='center' mt={5}>
+        <Flex justifyContent='center' mt={5} pb={20}>
           <Stack direction={"column"} justify="center" align={"center"}>
             <ButtonGroup>
               <Button
@@ -161,6 +171,9 @@ export default function Home() {
               <Heading>Subs</Heading>
               {userData && userData.subs.map(sub=>(
                 <Link fontWeight='semibold' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
+              ))}
+              {!userData && subs && subs.map(sub=>(
+                <Link fontWeight='semibold' textAlign='left' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
               ))}
             </Stack>
             <Button as={Link} href='/create' size='lg' colorScheme='blue' rightIcon={<EditIcon/>}>Post</Button>
