@@ -46,7 +46,7 @@ export default function SubPage() {
     const { sub } = useParams()
 
     useEffect(()=>{
-        db.collection('users')
+        user && db.collection('users')
         .where('email', '==', user.email)
         .get()
         .then((data)=>{
