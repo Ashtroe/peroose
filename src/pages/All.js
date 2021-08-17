@@ -31,7 +31,7 @@ import {
 } from "@chakra-ui/react";
 
 
-export default function Home() {
+export default function All() {
     const db = firebase.firestore()
     const storage = firebase.storage()
 
@@ -64,20 +64,6 @@ export default function Home() {
     },[])
 
     useEffect(() => {
-      if (userData) {
-        db.collection("posts")
-          .where("sub", "in", userData.subs)
-          .get()
-          .then((data) => {
-            let posts = data.docs.map((post) => ({
-              postID: post.id,
-              date: post.date,
-              ...post.data(),
-            }));
-            setPosts(posts); 
-            setLoading(false);
-          });
-      } else {
         db.collection("posts")
           .get()
           .then((data) => {
@@ -88,26 +74,28 @@ export default function Home() {
             }));
             setPosts(posts);
             setLoading(false);
+            sortByScore('ascend', posts, setPosts)
           });
-      }
     }, [userData]);
 
-    // Get all subs 
-    useEffect(()=>{
-      db.collection('subs')
-      .get()
-      .then((data)=>{
-        let allSubs = data.docs.map((sub)=>sub.id)
-        setSubs(allSubs)
-      })
-    },[])
+   
+
+        // Get all subs 
+        useEffect(()=>{
+          db.collection('subs')
+          .get()
+          .then((data)=>{
+            let allSubs = data.docs.map((sub)=>sub.id)
+            setSubs(allSubs)
+          })
+        },[])
 
     
-    if(width>960 && userData){
+    if(width>960){
       
       return (
-        <Flex justifyContent='center' mt={5} pb={20}>
-          <Stack direction={"column"} justify="center" align={"center"}>
+        <Flex justify='center'  mt={5} pb={20}>
+          <Stack  justify="center" align={"center"}>
             <ButtonGroup>
               <Button
                 isActive={filterNew}
@@ -158,27 +146,23 @@ export default function Home() {
             <Spinner />
           )}
         </Stack>
-          <Stack align='center' height='fit-content' ml={10}>
-            <Stack 
-              align='center'
-              width='xs'
-              height='fit-content'
-              
-              p={5}
-              bg='gray.50'
-              rounded={"md"}
-            >
-              <Heading>{userData ? 'Followed' : 'All Subs' }</Heading>
-              {userData && userData.subs.map(sub=>(
-                <Link fontWeight='semibold' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
-              ))}
-              {!userData && subs && subs.map(sub=>(
-                <Link fontWeight='semibold' textAlign='left' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
-              ))}
-            </Stack>
-            <Button as={Link} href='/create' size='lg' colorScheme='blue' rightIcon={<EditIcon/>}>Post</Button>
-
+        <Stack align='center' height='fit-content' ml={10}>
+          <Stack 
+            align='center'
+            width='xs'
+            height='fit-content'
+            p={5}
+            bg='gray.50'
+            rounded={"md"}
+          >
+            <Heading>Popular Subs</Heading>
+            {subs && subs.map(sub=>(
+              <Link fontWeight='semibold' textAlign='left' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
+            ))}
           </Stack>
+          <Button as={Link} href='/create' size='lg' colorScheme='blue' rightIcon={<EditIcon/>}>Post</Button>
+        </Stack>
+          
 
         </Flex>
       );

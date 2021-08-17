@@ -106,7 +106,7 @@ export default function SubPage() {
       }
     
     return (
-        <Stack justify='center' align={"center"} >
+        <Stack justify='center' align={"center"} mt={5} pb={20} >
         <Heading>{sub}</Heading>
         <Stack>
 
@@ -124,7 +124,6 @@ export default function SubPage() {
         ) : (
           <Spinner/>
         )}
-        <Link href="/create">New Post</Link>
       </Stack>
     )
 }

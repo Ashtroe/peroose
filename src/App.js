@@ -18,6 +18,7 @@ import PostPage from './pages/PostPage'
 import Create from './pages/Create'
 import Account from './pages/Account'
 import SubPage from './pages/SubPage'
+import All from "./pages/All"
 
 
 function App() {
@@ -38,7 +39,8 @@ function App() {
             <Route path="/login" component={Login}/>
             <Route path="/forgot" component={Forgot}/>
             <Route path="/home" component={Home}/>
-            <Redirect exact from='/' to='/home'/>
+            <Route path="/all" component={All}/>
+            <Redirect exact from='/' to='/all'/>
           </Switch>
       </Router>
     </ChakraProvider>

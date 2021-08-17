@@ -79,7 +79,7 @@ export default function Login() {
             </FormControl>
             
             <Button onClick={handleSubmit} mt={5} colorScheme='blue'>Log In</Button>
-            <Button onClick={handleSubmitDemo} mt={5} colorScheme='blue'>Demo</Button>
+            <Button onClick={handleSubmitDemo} mt={5} colorScheme='blue' variant='outline'>Demo</Button>
 
             </Box>
             <Link href='/forgot' size='md'  fontWeight='semibold' color='white'>Forgot password?</Link>

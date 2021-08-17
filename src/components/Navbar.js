@@ -108,7 +108,7 @@ export default function Navbar() {
         p={3}
         justify='space-between'
       >
-        <Link href='/'>
+        <Link href={user? '/home' : '/all'}>
           <Image
             src='/img/logo.png'
             width={100}
@@ -134,7 +134,7 @@ export default function Navbar() {
               width={"60%"}
               display="flex"
               justifyContent="center"
-              onClick={() => (logout(), window.location.reload())}
+              onClick={() => (logout(), history.push('/all'))}
             >
               Logout
             </Button>
