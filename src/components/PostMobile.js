@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useAuth } from '../context/authContext'
 import firebase from '../util/firebase'
 import { DateTime } from 'luxon'
-import { Box, Spacer, Text, Stack, Link, Heading, HStack, IconButton, Image, } from '@chakra-ui/react'
-import { TriangleUpIcon, TriangleDownIcon, Icon, ChatIcon, } from '@chakra-ui/icons'
+import { Box, Text, Stack, Link, Heading, HStack, IconButton, Image, } from '@chakra-ui/react'
+import { TriangleUpIcon, TriangleDownIcon, ChatIcon, } from '@chakra-ui/icons'
 import { useHistory } from 'react-router-dom'
 
 export default function PostMobile(props) {

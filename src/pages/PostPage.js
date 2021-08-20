@@ -7,7 +7,7 @@ import { useAuth } from '../context/authContext'
 import firebase from '../util/firebase'
 import { DateTime } from 'luxon'
 import { BsReplyFill } from 'react-icons/bs'
-import { TriangleUpIcon, TriangleDownIcon} from '@chakra-ui/icons'
+import { TriangleUpIcon, TriangleDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import {
   Button,
   Flex,
@@ -18,7 +18,10 @@ import {
   HStack,
   IconButton,
   Stack,
-  Link
+  Link,
+  Menu,
+  MenuList,
+  MenuButton
 } from "@chakra-ui/react";
 
 
@@ -36,6 +39,7 @@ export default function PostPage() {
 
     const [postData, setPostData] = useState(null)
     const [commentData, setCommentData] = useState([])
+    const [userData, setUserData] = useState(null)
     const [postLoading, setPostLoading] = useState(true)
     const [commentLoading, setCommentLoading] = useState(true)
     const [voted, setVoted] = useState(false)
@@ -49,6 +53,16 @@ export default function PostPage() {
             setPostLoading(false)
             setPostData(data.data());
         })
+      },[])
+
+      // Get User data 
+      useEffect(() => {
+        user && db.collection("users")
+          .where("email", "==", user.email)
+          .get()
+          .then((data) => {
+            data.docs[0] && setUserData(data.docs[0].data());
+          })
       },[])
 
     // Get Comments 
@@ -113,6 +127,19 @@ export default function PostPage() {
 
       }
 
+      let handleDelete = () =>{
+        db.collection('posts')
+          .doc(post)
+          .delete()
+            .then(()=>{
+              console.log(`"${postData.title}" succesfully deleted`);
+              history.push('/home')
+            })
+            .catch((error) => {
+              console.error('Error removing document: ', error);
+            });
+      }
+
     
     if (postLoading || !postData){
       return (
@@ -170,6 +197,7 @@ export default function PostPage() {
               variant='ghost'
               onClick={() => setReplyDisplay("block")}
             />
+            
           </HStack>
           <Flex w="100%" alignItems="center" direction="column" p={5}>
           <Textarea
@@ -245,6 +273,12 @@ export default function PostPage() {
               variant='ghost'
               onClick={() => setReplyDisplay("block")}
             />
+            <Menu>
+              <MenuButton as={HamburgerIcon} ></MenuButton>
+              <MenuList w='fit-content' display="flex" flexDir="column" alignItems="center" >
+                {userData && userData.username === postData.user && <Button colorScheme='red' onClick={handleDelete}>Delete</Button>}
+              </MenuList>
+            </Menu>
           </HStack>
           <Flex w="100%" alignItems="center" direction="column" p={0}>
           <Textarea

@@ -59,8 +59,6 @@ export default function Home() {
         .then((data) => {
           data.docs[0] && setUserData(data.docs[0].data());
         })
-
-        
     },[])
 
     useEffect(() => {

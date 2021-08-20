@@ -1,22 +1,20 @@
-import React, { useState } from "react";
-import { useAuth } from "../context/authContext";
-import firebase from "../util/firebase";
-import { DateTime } from "luxon";
+import { ChatIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
-  Box,
-  Spacer,
-  Text,
-  Stack,
-  Link,
+  Box, 
   Heading,
   HStack,
   IconButton,
-  Image,
-  VStack,
-  Icon,
+  Image, 
+  Link, 
+  Stack, 
+  Text, 
+  VStack
 } from "@chakra-ui/react";
-import { TriangleUpIcon, TriangleDownIcon, ChatIcon } from "@chakra-ui/icons";
+import { DateTime } from "luxon";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useAuth } from "../context/authContext";
+import firebase from "../util/firebase";
 
 export default function PostDesktop(props) {
   const [voted, setVoted] = useState(false);

@@ -1,27 +1,11 @@
-import React from 'react'
-import { DateTime } from 'luxon'
-import { BsReplyFill } from 'react-icons/bs'
-import { TriangleUpIcon, TriangleDownIcon, Icon, ChatIcon, } from '@chakra-ui/icons'
+import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Heading,
-  Text,
-  Textarea,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Image,
-  Center,
   HStack,
-  IconButton,
-  useDisclosure,
-  Stack
+  IconButton, Stack, Text
 } from "@chakra-ui/react";
+import { DateTime } from 'luxon';
+import React from 'react';
+import { BsReplyFill } from 'react-icons/bs';
 
 export default function SubComment({comment}) {
 

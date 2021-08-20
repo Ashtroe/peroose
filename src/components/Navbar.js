@@ -1,40 +1,20 @@
-import {React, useEffect, useState, useRef} from 'react'
-import { useHistory } from 'react-router'
-import useViewport from '../hooks/useViewport'
-import { useAuth } from '../context/authContext'
-import firebase from '../util/firebase'
+import { EditIcon, HamburgerIcon } from '@chakra-ui/icons'
 import {
-    Button,
-    Flex,
-    HStack,
-    Link,
-    Text,
-    Drawer,
-    DrawerBody,
-    DrawerFooter,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    IconButton,
-    useDisclosure,
-    VStack,
-    Avatar,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuGroup,
-    Accordion,
-    AccordionButton,
-    AccordionIcon,
-    AccordionPanel,
-    AccordionItem,
-    Divider,
-    Spacer,
-    Image,
-    ButtonGroup
-  } from "@chakra-ui/react";
-import { EditIcon, HamburgerIcon } from '@chakra-ui/icons';
+  Accordion,
+  AccordionButton,
+  AccordionIcon, AccordionItem, AccordionPanel, Avatar, Button, ButtonGroup, Divider, Drawer,
+  DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter,
+  DrawerOverlay, Flex,
+  HStack, IconButton, Image, Link, Menu,
+  MenuButton,
+  MenuList, Text, useDisclosure,
+  VStack
+} from "@chakra-ui/react"
+import { React, useEffect, useRef, useState } from 'react'
+import { useHistory } from 'react-router'
+import { useAuth } from '../context/authContext'
+import useViewport from '../hooks/useViewport'
+import firebase from '../util/firebase'
 
 
 export default function Navbar() {
@@ -53,11 +33,8 @@ export default function Navbar() {
         .where("email", "==", user.email.toLowerCase())
         .get()
         .then((data) => {
-          
           data.docs[0] && setUserData(data.docs[0].data());
         })
-
-        
     },[])
 
     // Desktop Not Signed In

@@ -1,34 +1,15 @@
-import {React, useEffect, useState} from 'react'
+import { ArrowDownIcon, ArrowUpIcon, EditIcon, SunIcon } from '@chakra-ui/icons'
+import {
+  Button, ButtonGroup, Flex, Heading, Link, Spinner, Stack
+} from "@chakra-ui/react"
+import { React, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { sortByNew, sortByOld, sortByScore } from '../util/sort'
+import PostDesktop from '../components/PostDesktop'
+import PostMobile from '../components/PostMobile'
 import { useAuth } from '../context/authContext'
 import useViewport from '../hooks/useViewport'
 import firebase from '../util/firebase'
-import { MdDirectionsCar } from 'react-icons/md'
-import { ArrowDownIcon, ArrowUpIcon, EditIcon, Icon, SunIcon } from '@chakra-ui/icons'
-import PostMobile from '../components/PostMobile'
-import PostDesktop from '../components/PostDesktop'
-import {
-  Box,
-  Button,
-  Heading,
-  HStack,
-  Link,
-  Stack,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Spinner,
-  IconButton,
-  MenuDivider,
-  ButtonGroup,
-  useBoolean,
-  Flex,
-  VStack,
-  Divider,
-  Image
-} from "@chakra-ui/react";
+import { sortByNew, sortByScore } from '../util/sort'
 
 
 export default function All() {
@@ -45,7 +26,7 @@ export default function All() {
     const [filterTop, setFilterTop] = useState(false)
     const [filterCont, setFilterCont] = useState(false)
     
-    const {login, logout, user } = useAuth()
+    const {user } = useAuth()
 
     const { width } = useViewport()
 
@@ -59,8 +40,6 @@ export default function All() {
         .then((data) => {
           data.docs[0] && setUserData(data.docs[0].data());
         })
-
-        
     },[])
 
     useEffect(() => {

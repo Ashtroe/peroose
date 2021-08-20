@@ -9,7 +9,6 @@ import { ChakraProvider } from "@chakra-ui/react"
 import { AuthProvider } from './context/authContext'
 import PrivateRoute from './components/PrivateRoute'
 import Home from './pages/Home'
-import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Navbar from './components/Navbar'

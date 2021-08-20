@@ -6,7 +6,6 @@ import {
   FormControl,
   Heading,
   Input,
-  Textarea,
   Alert,
   AlertIcon,
   CloseButton,
@@ -18,14 +17,14 @@ export default function Account() {
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
 
-    const { resetPassword,changeEmail, login, logout, user } = useAuth()
+    const { resetPassword, login, user } = useAuth()
 
     const emailRef = useRef()
     const passwordRef = useRef()
     const currentPasswordRef = useRef()
     const newPasswordRef = useRef()
 
-    const {isOpen, onOpen, isClosed} = useDisclosure()
+    const { onOpen,} = useDisclosure()
 
     let handleEmailChange = (e) =>{
         e.preventDefault()

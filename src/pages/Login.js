@@ -1,6 +1,5 @@
 import {useEffect, useState, useRef} from 'react'
 import { useHistory } from 'react-router'
-import firebase from '../util/firebase'
 import React from 'react'
 import { useAuth } from '../context/authContext'
 import { Box, FormLabel, Input, Alert, AlertIcon, FormControl, FormHelperText, Button, Link, Stack,  } from '@chakra-ui/react'
@@ -14,6 +13,20 @@ export default function Login() {
     const history = useHistory()
 
     let handleSubmit = (e) =>{
+        setError(null)
+        e.preventDefault()
+        login(emailRef.current.value, passwordRef.current.value)
+        .then(()=>{
+            history.push('/home')
+        })
+        .catch(err=>{
+            if(err){
+                setError(err.message)            
+            }
+        })
+    }
+
+    let handleGoogleSignIn = (e) =>{
         setError(null)
         e.preventDefault()
         login(emailRef.current.value, passwordRef.current.value)
@@ -78,8 +91,8 @@ export default function Login() {
                 <Input type="password" ref={passwordRef} isRequired/>
             </FormControl>
             
-            <Button onClick={handleSubmit} mt={5} colorScheme='blue'>Log In</Button>
-            <Button onClick={handleSubmitDemo} mt={5} colorScheme='blue' variant='outline'>Demo</Button>
+            <Button onClick={handleSubmit} w='60%' mt={5} colorScheme='blue'>Log In</Button>
+            <Button onClick={handleSubmitDemo} w='60%' mt={5} colorScheme='blue' variant='outline'>Demo</Button>
 
             </Box>
             <Link href='/forgot' size='md'  fontWeight='semibold' color='white'>Forgot password?</Link>
