@@ -32,6 +32,7 @@ import {
 
 
 export default function Home() {
+  
     const db = firebase.firestore()
     const storage = firebase.storage()
 
@@ -45,7 +46,7 @@ export default function Home() {
     const [filterTop, setFilterTop] = useState(false)
     const [filterCont, setFilterCont] = useState(false)
     
-    const {login, logout, user } = useAuth()
+    const { user } = useAuth()
 
     const { width } = useViewport()
 

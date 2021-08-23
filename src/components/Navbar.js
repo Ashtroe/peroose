@@ -85,7 +85,7 @@ export default function Navbar() {
         p={3}
         justify='space-between'
       >
-        <Link href={user? '/home' : '/all'}>
+        <Link href={user ? '/home' : '/all'}>
           <Image
             src='/img/logo.png'
             width={100}
@@ -102,7 +102,7 @@ export default function Navbar() {
           <MenuList display="flex" flexDir="column" alignItems="center">
             <Text fontSize='xl' fontWeight='bold' color='blue.600'>{userData && userData.username}</Text>
             <Divider/>
-            <Link to="/account" display="flex" justifyContent="center" fontWeight='semibold'>
+            <Link href="/account" display="flex" justifyContent="center" fontWeight='semibold'>
               Edit Account
             </Link>
             <Button
