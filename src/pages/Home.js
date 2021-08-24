@@ -151,7 +151,7 @@ export default function Home() {
             </ButtonGroup>
           {loading === false && posts ? (
             posts.map((post) => {
-              return <PostDesktop key={post.id} post={post} />;
+              return <PostDesktop key={post.postID} post={post} />;
             })
           ) : (
             <Spinner />
@@ -162,17 +162,16 @@ export default function Home() {
               align='center'
               width='xs'
               height='fit-content'
-              
               p={5}
               bg='gray.50'
               rounded={"md"}
             >
               <Heading>{userData ? 'Followed' : 'All Subs' }</Heading>
               {userData && userData.subs.map(sub=>(
-                <Link fontWeight='semibold' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
+                <Link key={sub} fontWeight='semibold' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
               ))}
               {!userData && subs && subs.map(sub=>(
-                <Link fontWeight='semibold' textAlign='left' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
+                <Link key={sub} fontWeight='semibold' textAlign='left' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
               ))}
             </Stack>
             <Button as={Link} href='/create' size='lg' colorScheme='blue' rightIcon={<EditIcon/>}>Post</Button>
@@ -189,18 +188,11 @@ export default function Home() {
         posts.map((post) => {
           return <PostMobile key={post.id} post={post} />;
         })
-
       ) : (
         <Spinner />
       )}
 
     </Stack>
   )
-
-    
-
-
-    
-    
 }
 

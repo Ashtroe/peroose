@@ -51,8 +51,7 @@ export default function PostDesktop(props) {
 
   return (
     <Box
-      maxW={"800px"}
-      w={"full"}
+      w={800}
       boxShadow={"lg"}
       rounded={"md"}
       p={6}

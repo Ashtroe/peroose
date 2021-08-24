@@ -119,7 +119,7 @@ export default function All() {
             </ButtonGroup>
           {loading === false && posts ? (
             posts.map((post) => {
-              return <PostDesktop key={post.id} post={post} />;
+              return <PostDesktop key={post.postID} post={post} />;
             })
           ) : (
             <Spinner />
@@ -136,7 +136,7 @@ export default function All() {
           >
             <Heading>Popular Subs</Heading>
             {subs && subs.map(sub=>(
-              <Link fontWeight='semibold' textAlign='left' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
+              <Link key={sub} fontWeight='semibold' textAlign='left' onClick={()=>history.push(`/sub/${sub}`)}>{sub}</ Link>
             ))}
           </Stack>
           <Button as={Link} href='/create' size='lg' colorScheme='blue' rightIcon={<EditIcon/>}>Post</Button>
